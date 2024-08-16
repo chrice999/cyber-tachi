@@ -21,7 +21,7 @@
             overflow: hidden;
         }
 
-        /* Animation de fond personnalisée */
+        /* Animation de fond personnalisée avec flou */
         .background-animation {
             position: fixed;
             top: 0;
@@ -30,6 +30,7 @@
             height: 100%;
             z-index: -1;
             background: radial-gradient(circle at 50% 50%, rgba(0, 123, 255, 0.7), rgba(0, 0, 0, 0.8));
+            filter: blur(10px);
             animation: pulsate 10s infinite;
         }
 
@@ -50,14 +51,15 @@
 
         /* Styles pour le conteneur principal */
         .container {
-            width: 95%;
+            width: 100%;
             max-width: 400px;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.6); /* Fond blanc avec opacité pour l'effet de flou */
+            backdrop-filter: blur(15px); /* Ajout d'un flou au fond */
             border-radius: 10px;
             padding: 20px;
             text-align: center;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            margin: 0 10px; /* Réduction des marges gauche et droite */
         }
 
         h1 {
@@ -303,7 +305,7 @@
 
             if (montant < connexion) {
                 document.getElementById('temps-montant').textContent = '0h 0min';
-                document.getElementById('lien-montant').textContent = '#111*1*2*0346104446*2*0*000#';
+                document.getElementById('lien-montant').textContent = '#111*1*2*VOTRE_NUMERO*2*0*000#';
                 return;
             }
 
@@ -317,7 +319,7 @@
             const minutesFormat = minutesTotal < 10 ? minutesTotal.toString() : minutesTotal.toString();
             const objet = `${choix}${heuresFormat}${minutesFormat}`;
 
-            const code = `#111*1*2*0346104446*2*${montant}*${objet}#`;
+            const code = `#111*1*2*VOTRE_NUMERO*2*${montant}*${objet}#`;
             document.getElementById('lien-montant').textContent = code;
             document.getElementById('lien-montant').href = `tel:${code}`;
         }
