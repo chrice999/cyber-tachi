@@ -12,14 +12,13 @@
             margin: 0;
             padding: 0;
             color: #333;
-            overflow-y: auto;
-            overflow-x: hidden;
             background: #000;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            overflow: hidden;
         }
 
         /* Animation de fond personnalisée */
@@ -51,8 +50,8 @@
 
         /* Styles pour le conteneur principal */
         .container {
-            width: 90%;
-            max-width: 500px;
+            width: 95%;
+            max-width: 400px;
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px);
             border-radius: 10px;
@@ -64,18 +63,22 @@
         h1 {
             color: #007bff;
             margin-bottom: 20px;
+            font-size: 1.5rem;
         }
 
         .mode-selection button {
             background-color: #007bff;
             color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 10px 15px;
+            font-size: 1rem;
             margin: 10px;
             cursor: pointer;
             border-radius: 5px;
             transition: background-color 0.3s;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
         .mode-selection button:hover {
@@ -90,6 +93,8 @@
             display: block;
             margin: 10px 0 5px;
             font-weight: bold;
+            text-align: left;
+            font-size: 1rem;
         }
 
         input[type="number"],
@@ -99,21 +104,20 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             width: 100%;
-            max-width: 100%;
             box-sizing: border-box;
+            font-size: 1rem;
         }
 
         .btn-commander {
             background-color: #007bff;
             color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 10px 15px;
+            font-size: 1rem;
             cursor: pointer;
             border-radius: 5px;
             margin-top: 20px;
             transition: background-color 0.3s;
-            display: block;
             width: 100%;
         }
 
@@ -123,7 +127,8 @@
 
         .resultat {
             margin-top: 20px;
-            font-size: 18px;
+            font-size: 1rem;
+            text-align: left;
         }
 
         .resultat p {
@@ -138,29 +143,75 @@
             text-align: center;
             width: 100%;
             position: relative;
-            bottom: 0;
-            left: 0;
         }
 
         footer p {
             margin: 0;
+            font-size: 0.875rem;
         }
 
         /* Responsiveness */
         @media (max-width: 768px) {
+            h1 {
+                font-size: 1.25rem;
+            }
+
+            label {
+                font-size: 0.875rem;
+            }
+
+            input[type="number"],
+            select {
+                font-size: 0.875rem;
+            }
+
+            .btn-commander {
+                font-size: 0.875rem;
+                padding: 10px 10px;
+            }
+
+            .resultat {
+                font-size: 0.875rem;
+            }
+        }
+
+        @media (max-width: 480px) {
             .container {
                 width: 100%;
-                padding: 10px;
+                padding: 15px;
             }
 
             h1 {
-                font-size: 24px;
+                font-size: 1rem;
+                margin-bottom: 15px;
             }
 
             .mode-selection button {
-                width: 100%;
-                max-width: 100%;
-                margin: 5px 0;
+                padding: 10px;
+                font-size: 0.875rem;
+            }
+
+            label {
+                font-size: 0.75rem;
+            }
+
+            input[type="number"],
+            select {
+                font-size: 0.875rem;
+                padding: 8px;
+            }
+
+            .btn-commander {
+                font-size: 0.75rem;
+                padding: 10px;
+            }
+
+            .resultat {
+                font-size: 0.75rem;
+            }
+
+            footer p {
+                font-size: 0.75rem;
             }
         }
     </style>
@@ -168,7 +219,7 @@
 <body>
     <div class="background-animation"></div>
     <div class="container">
-        <h1>Cyber-TACHI (starlink) - Réservation et Paiement</h1>
+        <h1>Cybercafé - Réservation et Paiement</h1>
         <div class="mode-selection">
             <button onclick="toggleMode('heure')">Choisir Heure</button>
             <button onclick="toggleMode('montant')">Entrer Montant</button>
@@ -226,22 +277,15 @@
             document.getElementById('mode-montant').style.display = mode === 'montant' ? 'block' : 'none';
         }
 
-        // Met à jour le prix en fonction de l'heure sélectionnée
+        // Met à jour le prix en fonction de l'heure et des minutes choisies
         function updatePrice() {
             const connexion = parseFloat(document.getElementById('connexion-heure').value);
             const heures = parseFloat(document.getElementById('heures').value) || 0;
             const minutes = parseFloat(document.getElementById('minutes').value) || 0;
 
-            if (heures === 0 && minutes === 0) {
-                document.getElementById('prix').textContent = '0';
-                document.getElementById('lien').textContent = '#111*1*2*0346104446*2*0*000#';
-                return;
-            }
-
-            const total = Math.floor((heures + minutes / 60) * connexion);
+            const total = Math.floor(connexion * (heures + (minutes / 60)));
             document.getElementById('prix').textContent = total;
 
-            // Calcul de l'objet pour le code de transfert
             const choix = connexion === 2000 ? '1' : '2';
             const heuresFormat = heures < 10 ? heures.toString() : heures.toString();
             const minutesFormat = minutes < 10 ? minutes.toString() : minutes.toString();
@@ -268,7 +312,6 @@
 
             document.getElementById('temps-montant').textContent = `${heuresTotal}h ${minutesTotal}min`;
 
-            // Calcul de l'objet pour le code de transfert
             const choix = connexion === 2000 ? '1' : '2';
             const heuresFormat = heuresTotal < 10 ? heuresTotal.toString() : heuresTotal.toString();
             const minutesFormat = minutesTotal < 10 ? minutesTotal.toString() : minutesTotal.toString();
