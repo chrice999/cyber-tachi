@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybercafé - Réservation et Paiement</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        /* Styles généraux pour la page */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Animation de fond personnalisée */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 123, 255, 0.7), rgba(0, 0, 0, 0.8));
+            animation: pulsate 10s infinite;
+        }
+
+        @keyframes pulsate {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.85;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Styles pour le conteneur principal */
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .mode-selection button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .mode-selection button:hover {
+            background-color: #0056b3;
+        }
+
+        .mode-form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input[type="number"],
+        select {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .btn-commander {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+            display: block;
+            width: 100%;
+        }
+
+        .btn-commander:hover {
+            background-color: #0056b3;
+        }
+
+        .resultat {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .resultat p {
+            margin: 10px 0;
+        }
+
+        /* Footer stylisé */
+        footer {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            width: 100%;
+            position: relative;
+            bottom: 0;
+            left: 0;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                width: 100%;
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .mode-selection button {
+                width: 100%;
+                max-width: 100%;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation"></div>
+    <div class="container">
+        <h1>Cyber-TACHI (starlink) - Réservation et Paiement</h1>
+        <div class="mode-selection">
+            <button onclick="toggleMode('heure')">Choisir Heure</button>
+            <button onclick="toggleMode('montant')">Entrer Montant</button>
+        </div>
+
+        <div id="mode-heure" class="mode-form">
+            <label for="connexion-heure">Choisissez un forfait :</label>
+            <select id="connexion-heure">
+                <option value="2000">20mb/s - 2000 Ar/heure</option>
+                <option value="5000">Illimité - 5000 Ar/heure</option>
+            </select>
+
+            <label for="heures">Heures :</label>
+            <input type="number" id="heures" min="1" value="1" onchange="updatePrice()">
+
+            <label for="minutes">Minutes :</label>
+            <input type="number" id="minutes" min="0" max="59" value="0" onchange="updatePrice()">
+
+            <button class="btn-commander" onclick="updatePrice()">Commander</button>
+
+            <div class="resultat">
+                <p>Prix total : <span id="prix">0</span> Ar</p>
+                <p><a id="lien" href="tel:#"></a></p>
+            </div>
+        </div>
+
+        <div id="mode-montant" class="mode-form" style="display:none;">
+            <label for="connexion-montant">Choisissez un forfait :</label>
+            <select id="connexion-montant">
+                <option value="2000">20mb/s - 2000 Ar/heure</option>
+                <option value="5000">Illimité - 5000 Ar/heure</option>
+            </select>
+
+            <label for="montant">Entrez le montant payé :</label>
+            <input type="number" id="montant" min="2000" value="2000" onchange="updateTime()">
+
+            <button class="btn-commander" onclick="updateTime()">Calculer</button>
+
+            <div class="resultat">
+                <p>Temps total : <span id="temps-montant">0h 0min</span></p>
+                <p><a id="lien-montant" href="tel:#"></a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Cybercafé. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        // Basculer entre les modes
+        function toggleMode(mode) {
+            document.getElementById('mode-heure').style.display = mode === 'heure' ? 'block' : 'none';
+            document.getElementById('mode-montant').style.display = mode === 'montant' ? 'block' : 'none';
+        }
+
+        // Met à jour le prix en fonction de l'heure sélectionnée
+        function updatePrice() {
+            const connexion = parseFloat(document.getElementById('connexion-heure').value);
+            const heures = parseFloat(document.getElementById('heures').value) || 0;
+            const minutes = parseFloat(document.getElementById('minutes').value) || 0;
+
+            if (heures === 0 && minutes === 0) {
+                document.getElementById('prix').textContent = '0';
+                document.getElementById('lien').textContent = '#111*1*2*0346104446*2*0*000#';
+                return;
+            }
+
+            const total = Math.floor((heures + minutes / 60) * connexion);
+            document.getElementById('prix').textContent = total;
+
+            // Calcul de l'objet pour le code de transfert
+            const choix = connexion === 2000 ? '1' : '2';
+            const heuresFormat = heures < 10 ? heures.toString() : heures.toString();
+            const minutesFormat = minutes < 10 ? minutes.toString() : minutes.toString();
+            const objet = `${choix}${heuresFormat}${minutesFormat}`;
+
+            const code = `#111*1*2*0346104446*2*${total}*${objet}#`;
+            document.getElementById('lien').textContent = code;
+            document.getElementById('lien').href = `tel:${code}`;
+        }
+
+        // Met à jour le temps en fonction du montant entré
+        function updateTime() {
+            const connexion = parseFloat(document.getElementById('connexion-montant').value);
+            const montant = parseFloat(document.getElementById('montant').value) || 0;
+
+            if (montant < connexion) {
+                document.getElementById('temps-montant').textContent = '0h 0min';
+                document.getElementById('lien-montant').textContent = '#111*1*2*0346104446*2*0*000#';
+                return;
+            }
+
+            const heuresTotal = Math.floor(montant / connexion);
+            const minutesTotal = Math.round(((montant / connexion) - heuresTotal) * 60);
+
+            document.getElementById('temps-montant').textContent = `${heuresTotal}h ${minutesTotal}min`;
+
+            // Calcul de l'objet pour le code de transfert
+            const choix = connexion === 2000 ? '1' : '2';
+            const heuresFormat = heuresTotal < 10 ? heuresTotal.toString() : heuresTotal.toString();
+            const minutesFormat = minutesTotal < 10 ? minutesTotal.toString() : minutesTotal.toString();
+            const objet = `${choix}${heuresFormat}${minutesFormat}`;
+
+            const code = `#111*1*2*VOTRE_NUMERO*2*${montant}*${objet}#`;
+            document.getElementById('lien-montant').textContent = code;
+            document.getElementById('lien-montant').href = `tel:${code}`;
+        }
+
+        // Initialisation des valeurs
+        document.addEventListener('DOMContentLoaded', () => {
+            updatePrice();
+            updateTime();
+        });
+    </script>
+</body>
+</html>
